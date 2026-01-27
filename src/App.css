@@ -1,25 +1,26 @@
 /*
-  Tahoe Seasons Landing Page
+  Tahoe Four Seasons Rentals – Landing Page
   - No external CSS framework
-  - Accessible focus rings
+  - High-contrast focus rings
   - Reduced motion support
+  - Layout + typography refresh (production-grade)
 */
 
 :root {
-  --bg: #15061f;
-  --surface: rgba(255, 255, 255, 0.07);
-  --surface2: rgba(255, 255, 255, 0.1);
-  --text: rgba(255, 249, 244, 0.94);
-  --muted: rgba(255, 245, 238, 0.74);
-  --faint: rgba(255, 241, 231, 0.56);
-  --border: rgba(255, 210, 255, 0.18);
-  --shadow:
-    0 18px 60px rgba(6, 2, 14, 0.6),
-    0 0 40px rgba(255, 79, 216, 0.12);
+  --bg: #07100e;
+  --bg2: #0b1512;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface2: rgba(255, 255, 255, 0.09);
+  --text: rgba(246, 245, 240, 0.96);
+  --muted: rgba(220, 224, 218, 0.78);
+  --faint: rgba(220, 224, 218, 0.62);
+  --border: rgba(246, 245, 240, 0.14);
 
-  --brand: #ff4fd8;
-  --brand2: #6af6ff;
-  --focus: rgba(106, 246, 255, 0.9);
+  --lake: #7dd3fc;
+  --pine: #2d6a4f;
+  --sun: #f2c76e;
+
+  --focus: rgba(125, 211, 252, 0.92);
 
   --radius: 18px;
   --radius-sm: 14px;
@@ -34,9 +35,11 @@
 .page {
   min-height: 100dvh;
   color: var(--text);
-  background: radial-gradient(1200px 600px at 20% -10%, rgba(255, 79, 216, 0.08), transparent 55%),
-    radial-gradient(900px 520px at 80% 0%, rgba(106, 246, 255, 0.08), transparent 60%),
-    var(--bg);
+  background:
+    radial-gradient(1200px 680px at 18% -10%, rgba(125, 211, 252, 0.10), transparent 54%),
+    radial-gradient(1000px 560px at 92% 0%, rgba(242, 199, 110, 0.10), transparent 55%),
+    radial-gradient(1000px 640px at 34% 120%, rgba(45, 106, 79, 0.12), transparent 62%),
+    linear-gradient(180deg, var(--bg2), var(--bg));
 }
 
 .skipLink {
@@ -44,7 +47,7 @@
   left: -999px;
   top: 12px;
   padding: 10px 12px;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.86);
   border: 1px solid var(--border);
   border-radius: 12px;
   color: var(--text);
@@ -57,9 +60,11 @@
   outline-offset: 3px;
 }
 
+/* NAV */
+
 .topNav {
   position: sticky;
-  top: 0;
+  top: 10px;
   z-index: 50;
   display: flex;
   gap: 16px;
@@ -70,9 +75,9 @@
   width: min(var(--container), calc(100% - 28px));
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(17, 7, 27, 0.72);
+  background: rgba(10, 18, 16, 0.74);
   backdrop-filter: blur(14px);
-  box-shadow: 0 10px 30px rgba(6, 2, 14, 0.45), 0 0 24px rgba(106, 246, 255, 0.08);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
 }
 
 .brand {
@@ -89,8 +94,10 @@
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(255, 79, 216, 0.35), rgba(106, 246, 255, 0.2));
-  border: 1px solid rgba(255, 210, 255, 0.18);
+  border: 1px solid rgba(246, 245, 240, 0.18);
+  background:
+    radial-gradient(10px 10px at 30% 28%, rgba(255, 255, 255, 0.30), transparent 60%),
+    linear-gradient(135deg, rgba(125, 211, 252, 0.22), rgba(45, 106, 79, 0.22));
 }
 
 .brandText {
@@ -99,7 +106,7 @@
 }
 
 .brandName {
-  font-weight: 720;
+  font-weight: 760;
   letter-spacing: 0.2px;
 }
 
@@ -110,14 +117,14 @@
 
 .navLinks {
   display: flex;
-  gap: 12px;
+  gap: 6px;
   align-items: center;
 }
 
 .navLinks a {
   color: var(--muted);
   text-decoration: none;
-  font-weight: 540;
+  font-weight: 600;
   font-size: 14px;
   padding: 10px 12px;
   border-radius: 999px;
@@ -137,29 +144,30 @@ select:focus-visible {
   outline-offset: 3px;
 }
 
+/* HERO */
+
 .hero {
   margin: 18px auto 0;
   width: min(var(--container), calc(100% - 28px));
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1.25fr 0.75fr;
   gap: 22px;
-  padding: 42px 24px;
-  border-radius: calc(var(--radius) + 8px);
+  padding: 44px 24px;
+  border-radius: calc(var(--radius) + 10px);
   border: 1px solid var(--border);
   background:
-    linear-gradient(180deg, rgba(255, 106, 168, 0.16), rgba(21, 6, 31, 0.2) 55%, rgba(10, 4, 18, 0.7)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 48px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 48px),
-    radial-gradient(1200px 420px at 10% 20%, rgba(106, 246, 255, 0.25), transparent 60%),
-    radial-gradient(1000px 380px at 90% 10%, rgba(255, 79, 216, 0.2), transparent 55%),
-    radial-gradient(900px 380px at 30% 110%, rgba(255, 140, 84, 0.12), transparent 60%),
-    rgba(17, 7, 27, 0.62);
+    radial-gradient(1000px 520px at 8% 14%, rgba(125, 211, 252, 0.22), transparent 58%),
+    radial-gradient(900px 520px at 92% 8%, rgba(242, 199, 110, 0.18), transparent 58%),
+    radial-gradient(900px 520px at 40% 120%, rgba(45, 106, 79, 0.20), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.18));
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
 }
 
 .heroInner {
-  max-width: 620px;
+  max-width: 640px;
 }
 
 .eyebrow {
@@ -167,21 +175,21 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  letter-spacing: 0.12em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(246, 245, 240, 0.74);
 }
 
 .heroTitle {
   margin: 14px 0 0;
-  font-size: clamp(34px, 4.2vw, 56px);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  font-size: clamp(34px, 4.2vw, 58px);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
 }
 
 .heroAccent {
-  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  background: linear-gradient(90deg, var(--lake), rgba(242, 199, 110, 0.95));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -189,9 +197,9 @@ select:focus-visible {
 
 .heroSubtitle {
   margin: 14px 0 0;
-  font-size: 16px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.78);
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: rgba(246, 245, 240, 0.80);
 }
 
 .heroActions {
@@ -209,7 +217,7 @@ select:focus-visible {
   padding: 12px 14px;
   border-radius: 999px;
   text-decoration: none;
-  font-weight: 650;
+  font-weight: 720;
   letter-spacing: 0.01em;
   display: inline-flex;
   align-items: center;
@@ -225,9 +233,10 @@ select:focus-visible {
 }
 
 .button.primary {
-  border-color: rgba(255, 79, 216, 0.4);
-  background: linear-gradient(135deg, rgba(255, 79, 216, 0.28), rgba(106, 246, 255, 0.18));
-  box-shadow: 0 10px 24px rgba(7, 2, 16, 0.45), 0 0 24px rgba(255, 79, 216, 0.16);
+  border-color: rgba(125, 211, 252, 0.42);
+  background:
+    linear-gradient(135deg, rgba(125, 211, 252, 0.22), rgba(45, 106, 79, 0.18));
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.38);
 }
 
 .button.secondary {
@@ -253,23 +262,23 @@ select:focus-visible {
 
 .stat {
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 210, 255, 0.16);
+  border: 1px solid rgba(246, 245, 240, 0.14);
   background: rgba(255, 255, 255, 0.06);
   padding: 12px;
 }
 
 .stat dt {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.72);
-  letter-spacing: 0.06em;
+  color: rgba(246, 245, 240, 0.70);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 6px;
 }
 
 .stat dd {
   margin: 0;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 650;
+  color: rgba(246, 245, 240, 0.92);
+  font-weight: 700;
   font-size: 14px;
 }
 
@@ -278,84 +287,107 @@ select:focus-visible {
   min-height: 320px;
 }
 
+/* Simple “map pin” accents – subtle, non-neon. */
 .orb {
   position: absolute;
   border-radius: 999px;
-  filter: blur(24px);
-  opacity: 0.75;
+  filter: blur(18px);
+  opacity: 0.7;
+  transform: translate3d(0, 0, 0);
+  animation: orbFloat 9.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes orbFloat {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .orb1 {
   width: 240px;
   height: 240px;
-  right: -60px;
-  top: -40px;
-  background: radial-gradient(circle at 30% 30%, rgba(106, 246, 255, 0.95), rgba(106, 246, 255, 0));
+  right: -64px;
+  top: -54px;
+  background: radial-gradient(circle at 30% 30%, rgba(125, 211, 252, 0.82), rgba(125, 211, 252, 0));
+  animation-duration: 10.5s;
 }
 
 .orb2 {
-  width: 280px;
-  height: 280px;
-  left: -60px;
-  top: 80px;
-  background: radial-gradient(circle at 40% 40%, rgba(255, 120, 200, 0.8), rgba(255, 120, 200, 0));
+  width: 260px;
+  height: 260px;
+  left: -64px;
+  top: 92px;
+  background: radial-gradient(circle at 40% 40%, rgba(242, 199, 110, 0.64), rgba(242, 199, 110, 0));
+  animation-duration: 12.5s;
+  animation-delay: -2.5s;
 }
 
 .orb3 {
   width: 220px;
   height: 220px;
-  left: 40px;
-  bottom: -80px;
-  background: radial-gradient(circle at 40% 40%, rgba(255, 79, 216, 0.7), rgba(255, 79, 216, 0));
+  left: 28px;
+  bottom: -88px;
+  background: radial-gradient(circle at 40% 40%, rgba(45, 106, 79, 0.62), rgba(45, 106, 79, 0));
+  animation-duration: 11.25s;
+  animation-delay: -1.25s;
 }
 
 .heroCard {
   position: relative;
   z-index: 2;
   margin-left: auto;
-  max-width: 360px;
-  border-radius: calc(var(--radius) + 8px);
-  border: 1px solid rgba(255, 210, 255, 0.18);
-  background: rgba(16, 6, 26, 0.7);
+  max-width: 380px;
+  border-radius: calc(var(--radius) + 10px);
+  border: 1px solid rgba(246, 245, 240, 0.16);
+  background: rgba(9, 17, 15, 0.72);
   backdrop-filter: blur(10px);
-  box-shadow: 0 16px 50px rgba(6, 2, 14, 0.55), 0 0 28px rgba(106, 246, 255, 0.08);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.48);
   padding: 18px;
 }
 
 .heroCardTitle {
   margin: 0;
-  font-weight: 750;
+  font-weight: 780;
   letter-spacing: -0.01em;
 }
 
 .heroCardList {
   margin: 12px 0 0;
   padding-left: 18px;
-  color: rgba(255, 255, 255, 0.78);
-  line-height: 1.5;
+  color: rgba(246, 245, 240, 0.78);
+  line-height: 1.6;
 }
+
+/* SECTIONS */
 
 .section {
   width: min(var(--container), calc(100% - 28px));
-  margin: 36px auto 0;
+  margin: 38px auto 0;
 }
 
 .sectionHeader {
   display: grid;
   gap: 10px;
-  max-width: 720px;
+  max-width: 740px;
 }
 
 .sectionHeader h2 {
   margin: 0;
-  font-size: clamp(24px, 2.6vw, 34px);
-  letter-spacing: -0.02em;
+  font-size: clamp(24px, 2.7vw, 36px);
+  letter-spacing: -0.03em;
 }
 
 .sectionHeader p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.76);
-  line-height: 1.6;
+  color: rgba(246, 245, 240, 0.78);
+  line-height: 1.65;
 }
 
 .seasonGrid {
@@ -367,10 +399,17 @@ select:focus-visible {
 
 .seasonCard {
   border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(246, 245, 240, 0.12);
   padding: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.25);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.seasonCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(246, 245, 240, 0.16);
   background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
 }
 
 .seasonCard h3 {
@@ -381,13 +420,13 @@ select:focus-visible {
 
 .seasonKicker {
   margin: 6px 0 0;
-  color: rgba(255, 255, 255, 0.74);
+  color: rgba(246, 245, 240, 0.74);
 }
 
 .seasonBlurb {
   margin: 12px 0 0;
-  color: rgba(255, 255, 255, 0.78);
-  line-height: 1.55;
+  color: rgba(246, 245, 240, 0.80);
+  line-height: 1.6;
 }
 
 .chips {
@@ -400,20 +439,20 @@ select:focus-visible {
 }
 
 .chip {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(246, 245, 240, 0.14);
   background: rgba(255, 255, 255, 0.06);
   padding: 7px 10px;
   border-radius: 999px;
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(246, 245, 240, 0.84);
 }
 
 .textLink {
   display: inline-flex;
   margin-top: 14px;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(246, 245, 240, 0.92);
   text-decoration: none;
-  font-weight: 650;
+  font-weight: 720;
 }
 
 .textLink:hover {
@@ -422,31 +461,33 @@ select:focus-visible {
 
 .seasonCard.spring {
   background:
-    radial-gradient(700px 220px at 10% 10%, rgba(168, 255, 207, 0.2), transparent 55%),
-    radial-gradient(800px 260px at 90% 10%, rgba(126, 230, 255, 0.18), transparent 60%),
+    radial-gradient(700px 240px at 12% 12%, rgba(45, 106, 79, 0.22), transparent 56%),
+    radial-gradient(720px 260px at 90% 8%, rgba(125, 211, 252, 0.16), transparent 60%),
     rgba(255, 255, 255, 0.05);
 }
 
 .seasonCard.summer {
   background:
-    radial-gradient(720px 240px at 10% 20%, rgba(126, 230, 255, 0.22), transparent 55%),
-    radial-gradient(720px 240px at 90% 10%, rgba(255, 171, 120, 0.18), transparent 60%),
+    radial-gradient(720px 260px at 12% 16%, rgba(125, 211, 252, 0.24), transparent 56%),
+    radial-gradient(720px 260px at 90% 10%, rgba(242, 199, 110, 0.18), transparent 60%),
     rgba(255, 255, 255, 0.05);
 }
 
 .seasonCard.fall {
   background:
-    radial-gradient(760px 240px at 10% 20%, rgba(255, 171, 120, 0.22), transparent 55%),
-    radial-gradient(760px 240px at 90% 10%, rgba(255, 209, 143, 0.16), transparent 60%),
+    radial-gradient(760px 260px at 12% 16%, rgba(242, 199, 110, 0.22), transparent 56%),
+    radial-gradient(760px 260px at 90% 10%, rgba(45, 106, 79, 0.16), transparent 60%),
     rgba(255, 255, 255, 0.05);
 }
 
 .seasonCard.winter {
   background:
-    radial-gradient(760px 240px at 10% 20%, rgba(148, 196, 255, 0.22), transparent 55%),
-    radial-gradient(760px 240px at 90% 10%, rgba(126, 230, 255, 0.14), transparent 60%),
+    radial-gradient(760px 260px at 12% 16%, rgba(125, 211, 252, 0.22), transparent 56%),
+    radial-gradient(760px 260px at 90% 10%, rgba(246, 245, 240, 0.12), transparent 60%),
     rgba(255, 255, 255, 0.05);
 }
+
+/* LISTINGS */
 
 .listingGrid {
   margin-top: 18px;
@@ -457,12 +498,19 @@ select:focus-visible {
 
 .listingCard {
   border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(246, 245, 240, 0.12);
   background: rgba(255, 255, 255, 0.05);
   padding: 18px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.25);
   display: grid;
   gap: 12px;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.listingCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(246, 245, 240, 0.16);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .listingTop {
@@ -483,16 +531,16 @@ select:focus-visible {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  color: rgba(255, 255, 255, 0.76);
+  color: rgba(246, 245, 240, 0.78);
   font-size: 13px;
 }
 
 .pill {
-  border: 1px solid rgba(126, 230, 255, 0.28);
-  background: rgba(126, 230, 255, 0.1);
+  border: 1px solid rgba(125, 211, 252, 0.26);
+  background: rgba(125, 211, 252, 0.10);
   padding: 6px 10px;
   border-radius: 999px;
-  font-weight: 650;
+  font-weight: 700;
 }
 
 .dot {
@@ -505,20 +553,20 @@ select:focus-visible {
 }
 
 .priceValue {
-  font-weight: 820;
+  font-weight: 850;
   font-size: 20px;
 }
 
 .priceUnit {
   display: block;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(246, 245, 240, 0.70);
   font-size: 12px;
 }
 
 .listingDesc {
   margin: 0;
-  color: rgba(255, 255, 255, 0.78);
-  line-height: 1.55;
+  color: rgba(246, 245, 240, 0.80);
+  line-height: 1.6;
 }
 
 .amenities {
@@ -532,11 +580,11 @@ select:focus-visible {
 
 .amenity {
   font-size: 12.5px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(246, 245, 240, 0.14);
   background: rgba(255, 255, 255, 0.06);
   padding: 7px 10px;
   border-radius: 999px;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(246, 245, 240, 0.84);
 }
 
 .listingActions {
@@ -545,34 +593,36 @@ select:focus-visible {
   flex-wrap: wrap;
 }
 
+/* CTA */
+
 .cta {
   width: min(var(--container), calc(100% - 28px));
-  margin: 40px auto 0;
-  border-radius: calc(var(--radius) + 8px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 44px auto 0;
+  border-radius: calc(var(--radius) + 10px);
+  border: 1px solid rgba(246, 245, 240, 0.12);
   background:
-    radial-gradient(900px 360px at 20% 20%, rgba(126, 230, 255, 0.22), transparent 60%),
-    radial-gradient(860px 340px at 90% 10%, rgba(255, 171, 120, 0.16), transparent 55%),
+    radial-gradient(960px 420px at 20% 20%, rgba(125, 211, 252, 0.22), transparent 60%),
+    radial-gradient(920px 420px at 90% 10%, rgba(242, 199, 110, 0.16), transparent 58%),
     rgba(255, 255, 255, 0.05);
-  box-shadow: var(--shadow);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.44);
 }
 
 .ctaInner {
   padding: 28px 20px;
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .ctaInner h2 {
   margin: 0;
-  font-size: clamp(24px, 2.6vw, 34px);
-  letter-spacing: -0.02em;
+  font-size: clamp(24px, 2.7vw, 36px);
+  letter-spacing: -0.03em;
 }
 
 .ctaInner p {
   margin: 10px 0 0;
-  color: rgba(255, 255, 255, 0.78);
-  line-height: 1.6;
+  color: rgba(246, 245, 240, 0.80);
+  line-height: 1.65;
 }
 
 .ctaActions {
@@ -585,16 +635,18 @@ select:focus-visible {
 .finePrint {
   margin-top: 12px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(246, 245, 240, 0.62);
 }
+
+/* FOOTER */
 
 .footer {
   width: min(var(--container), calc(100% - 28px));
-  margin: 28px auto 32px;
+  margin: 28px auto 34px;
 }
 
 .footerInner {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(246, 245, 240, 0.12);
   padding-top: 16px;
   display: flex;
   justify-content: space-between;
@@ -603,7 +655,7 @@ select:focus-visible {
 }
 
 .muted {
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(246, 245, 240, 0.62);
 }
 
 @media (max-width: 980px) {
@@ -622,8 +674,6 @@ select:focus-visible {
   .listingGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  /* CTA is button-only; no form responsive grid needed. */
 }
 
 @media (max-width: 560px) {
@@ -652,16 +702,26 @@ select:focus-visible {
   .listingGrid {
     grid-template-columns: 1fr;
   }
-
-  /* CTA is button-only; no form responsive grid needed. */
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .button,
+  .seasonCard,
+  .listingCard {
     transition: none;
   }
 
-  .button:hover {
+  .orb {
+    animation: none;
+  }
+
+  .button:hover,
+  .seasonCard:hover,
+  .listingCard:hover {
     transform: none;
   }
 }

@@ -1,6 +1,6 @@
 :root {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
   line-height: 1.5;
   font-weight: 400;
 
@@ -9,7 +9,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background: #0b0b1b;
+  background: #09110f;
 }
 
 html {
@@ -21,10 +21,10 @@ body {
   min-width: 320px;
   min-height: 100dvh;
   background:
-    radial-gradient(900px 420px at 85% -10%, rgba(255, 97, 180, 0.18), transparent 60%),
-    radial-gradient(1000px 460px at 0% 10%, rgba(255, 175, 110, 0.2), transparent 55%),
-    radial-gradient(900px 520px at 40% 100%, rgba(90, 210, 255, 0.14), transparent 60%),
-    linear-gradient(180deg, #1a0f35 0%, #0b0b1b 48%, #14091d 100%);
+    radial-gradient(1200px 640px at 10% -10%, rgba(125, 211, 252, 0.12), transparent 55%),
+    radial-gradient(900px 520px at 92% 0%, rgba(242, 199, 110, 0.12), transparent 56%),
+    radial-gradient(900px 560px at 40% 110%, rgba(45, 106, 79, 0.14), transparent 62%),
+    linear-gradient(180deg, #0b1512 0%, #07100e 52%, #0a1412 100%);
 }
 
 #root {
@@ -33,51 +33,41 @@ body {
   z-index: 1;
 }
 
+/* Subtle topo + grain overlay (no motion; avoids “techy scanlines”). */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  opacity: 0.18;
+  mix-blend-mode: soft-light;
   background-image:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.035) 0px,
-      rgba(255, 255, 255, 0.035) 1px,
-      rgba(0, 0, 0, 0) 2px,
-      rgba(0, 0, 0, 0) 4px
+    repeating-radial-gradient(
+      circle at 20% 15%,
+      rgba(255, 255, 255, 0.035) 0 1px,
+      rgba(0, 0, 0, 0) 1px 18px
+    ),
+    repeating-radial-gradient(
+      circle at 80% 25%,
+      rgba(255, 255, 255, 0.03) 0 1px,
+      rgba(0, 0, 0, 0) 1px 22px
     ),
     repeating-linear-gradient(
-      90deg,
+      0deg,
       rgba(255, 255, 255, 0.02) 0px,
       rgba(255, 255, 255, 0.02) 1px,
       rgba(0, 0, 0, 0) 2px,
-      rgba(0, 0, 0, 0) 3px
+      rgba(0, 0, 0, 0) 8px
     );
-  opacity: 0.12;
-  mix-blend-mode: screen;
-  animation: scanlines 12s linear infinite;
 }
 
 ::selection {
-  background: rgba(255, 110, 199, 0.35);
-}
-
-@keyframes scanlines {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(12px);
-  }
+  background: rgba(125, 211, 252, 0.28);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  body::before {
-    animation: none;
   }
 }
