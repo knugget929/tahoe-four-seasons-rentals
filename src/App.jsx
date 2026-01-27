@@ -4,37 +4,37 @@ const seasons = [
   {
     id: 'spring',
     name: 'Spring',
-    kicker: 'Wildflower weekends & lake-sparkle mornings',
+    kicker: 'Clear air, quiet trails, first bloom',
     blurb:
-      'When the snowline lifts and the trails re-open, Tahoe turns soft and bright. Think patio coffee, waterfall hikes, and quiet coves before the summer buzz.',
-    highlights: ['Wildflower trails', 'Sunny decks', 'Shoulder-season steals'],
+      'Between snowmelt and summer crowds, Tahoe feels spacious. It’s the season for waterfall hikes, patio coffee, and that first warm light on the lake.',
+    highlights: ['Waterfalls + wildflowers', 'Shoulder‑season value', 'Deck mornings'],
     gradient: 'seasonCard spring',
   },
   {
     id: 'summer',
     name: 'Summer',
-    kicker: 'Blue-water days & golden-hour dinners',
+    kicker: 'Blue water days & long evenings',
     blurb:
-      'Boat. Beach. Bike. Repeat. Summer in Tahoe is all swim breaks and sunset BBQs—wrapped in pine air and that postcard-blue lake you came for.',
-    highlights: ['Beach packs + towels', 'BBQ-ready patios', 'Walkable shoreline'],
+      'Swim breaks, bike rides, and dinners that stretch into golden hour. Summer is bright, active, and made for lake time—start to finish.',
+    highlights: ['Beach gear ready', 'BBQ patios', 'Walkable shoreline'],
     gradient: 'seasonCard summer',
   },
   {
     id: 'fall',
     name: 'Fall',
-    kicker: 'Crisp hikes & cozy cabin nights',
+    kicker: 'Crisp hikes & cabin‑cozy nights',
     blurb:
-      'Aspens glow, crowds thin, and the mornings smell like woodsmoke and pine. Fall is made for scenic drives, hot cider, and lakeside stillness.',
-    highlights: ['Fireplace evenings', 'Leaf-peeping routes', 'Quiet, romantic stays'],
+      'Aspens glow, crowds thin, and mornings turn brisk. Fall is for scenic drives, hot cider, and returning home to a fireplace and a view.',
+    highlights: ['Fireplace evenings', 'Leaf‑peeping routes', 'Quieter weekends'],
     gradient: 'seasonCard fall',
   },
   {
     id: 'winter',
     name: 'Winter',
-    kicker: 'Powder turns, saunas & storm watching',
+    kicker: 'Powder mornings, warm soaks, storm views',
     blurb:
-      'Snow days feel like a movie here. Wake up to fresh powder, chase first chair, then come home to a warm soak and a view that doesn’t quit.',
-    highlights: ['Ski storage', 'Hot tubs & saunas', 'Near resort access'],
+      'Fresh snow, first chair, and the kind of quiet you only get mid‑storm. Winter stays are about comfort—heat, gear storage, and a good soak.',
+    highlights: ['Ski‑friendly setups', 'Hot tubs & saunas', 'Near resort access'],
     gradient: 'seasonCard winter',
   },
 ]
@@ -46,9 +46,9 @@ const listings = [
     season: 'Winter',
     price: 325,
     sleeps: 4,
-    badges: ['Hot tub', 'Ski shuttle nearby', 'Fireplace'],
+    badges: ['Hot tub', 'Fireplace', 'Ski shuttle nearby'],
     description:
-      'A bright A‑frame with a steamy soak under the stars—made for powder mornings and cocoa nights.',
+      'A bright A‑frame with a steamy soak under the pines—built for powder mornings and cocoa nights.',
   },
   {
     id: 'l2',
@@ -58,7 +58,7 @@ const listings = [
     sleeps: 6,
     badges: ['Beach gear', 'BBQ', 'Kayak rack'],
     description:
-      'Steps to the water with an easy-breezy layout for swim breaks, sunset dinners, and sandy feet.',
+      'Steps to the water with an easy, open layout for swim breaks, sunset dinners, and sandy feet.',
   },
   {
     id: 'l3',
@@ -68,7 +68,7 @@ const listings = [
     sleeps: 2,
     badges: ['Cedar sauna', 'Mountain view', 'Fast Wi‑Fi'],
     description:
-      'A warm, minimalist retreat for leaf-peeping days and candlelit nights—quiet, calm, and close to trails.',
+      'A calm, minimalist retreat for leaf‑peeping days and candlelit nights—quiet, close to trails.',
   },
   {
     id: 'l4',
@@ -78,7 +78,7 @@ const listings = [
     sleeps: 5,
     badges: ['Deck dining', 'Trailhead close', 'EV outlet'],
     description:
-      'Catch the first bloom and the clearest light—an airy cabin with room to breathe and a deck built for brunch.',
+      'Catch the first bloom and the clearest light—an airy cabin with a deck that’s made for brunch.',
   },
   {
     id: 'l5',
@@ -88,7 +88,7 @@ const listings = [
     sleeps: 8,
     badges: ['Game room', 'Boot warmer', 'Chef kitchen'],
     description:
-      'A spacious, design-forward chalet for crews—après games, big meals, and plenty of elbow room.',
+      'A spacious, design‑forward chalet for crews—après games, big meals, and plenty of elbow room.',
   },
   {
     id: 'l6',
@@ -98,7 +98,7 @@ const listings = [
     sleeps: 4,
     badges: ['Walk to dining', 'Outdoor shower', 'Bikes'],
     description:
-      'Golden-hour central: roll to coffee, bike to the beach, and finish with an outdoor rinse and a slow evening.',
+      'Golden‑hour central: bike to the beach, rinse off outside, and settle into an unhurried evening.',
   },
 ]
 
@@ -110,14 +110,14 @@ function Nav() {
           ⛰
         </span>
         <span className="brandText">
-          <span className="brandName">Lake Tahoe Rentals</span>
-          <span className="brandTag">Four‑season escapes</span>
+          <span className="brandName">Tahoe Four Seasons Rentals</span>
+          <span className="brandTag">Cabins, chalets, A‑frames</span>
         </span>
       </a>
       <nav className="navLinks">
         <a href="#seasons">Seasons</a>
-        <a href="#listings">Featured Cabins</a>
-        <a href="#cta">Book</a>
+        <a href="#listings">Featured cabins</a>
+        <a href="#cta">Availability</a>
       </nav>
     </header>
   )
@@ -125,15 +125,15 @@ function Nav() {
 
 function Hero() {
   return (
-    <section className="hero" aria-label="Lake Tahoe rentals">
+    <section className="hero" aria-label="Tahoe rentals landing">
       <div className="heroInner">
-        <p className="eyebrow">Lake Tahoe • Four-season escapes</p>
+        <p className="eyebrow">Lake Tahoe • Four‑season stays</p>
         <h1 className="heroTitle">
-          Find your Tahoe vibe—<span className="heroAccent">every season</span>.
+          Your Tahoe home base—<span className="heroAccent">all year</span>.
         </h1>
         <p className="heroSubtitle">
-          From wildflower mornings to powder nights, discover homes that feel like a lifestyle upgrade—not
-          just a place to sleep.
+          Curated places that feel settled and well‑considered: close to the lake, the lifts, or the trailhead,
+          with the small details that make a trip easy.
         </p>
 
         <div className="heroActions">
@@ -147,16 +147,16 @@ function Hero() {
 
         <dl className="heroStats" aria-label="Highlights">
           <div className="stat">
-            <dt>Curated homes</dt>
-            <dd>Cabins, chalets, A‑frames</dd>
+            <dt>Thoughtful picks</dt>
+            <dd>Comfort + character</dd>
           </div>
           <div className="stat">
-            <dt>All seasons</dt>
+            <dt>Four seasons</dt>
             <dd>Spring to storm days</dd>
           </div>
           <div className="stat">
-            <dt>Local feel</dt>
-            <dd>Trails, beaches, towns</dd>
+            <dt>Local rhythm</dt>
+            <dd>Beach, town, trails</dd>
           </div>
         </dl>
       </div>
@@ -166,11 +166,11 @@ function Hero() {
         <div className="orb orb2" />
         <div className="orb orb3" />
         <div className="heroCard">
-          <p className="heroCardTitle">This week in Tahoe</p>
+          <p className="heroCardTitle">Trip ideas</p>
           <ul className="heroCardList">
             <li>Sunrise coffee on the deck</li>
-            <li>Lake loop strolls</li>
-            <li>Firepit stories</li>
+            <li>Lake‑loop strolls</li>
+            <li>Market haul → simple dinner</li>
             <li>Hot tub under the pines</li>
           </ul>
         </div>
@@ -185,8 +185,8 @@ function SeasonGrid() {
       <div className="sectionHeader">
         <h2 id="seasons-title">Tahoe, in four seasons</h2>
         <p>
-          Pick your pace—quiet and cozy or bright and bold. Each season has its own rhythm (and its own
-          kind of magic).
+          Pick your pace—quiet and cozy or bright and busy. Each season has its own rhythm (and its own kind
+          of magic).
         </p>
       </div>
 
@@ -221,8 +221,8 @@ function ListingGrid() {
       <div className="sectionHeader">
         <h2 id="listings-title">Featured cabins (sample listings)</h2>
         <p>
-          A taste of what we curate—real homes, real comfort, and a vibe that matches your trip.
-          (Listings shown are demo data.)
+          A quick look at what we mean by “curated”—real comfort, clean design, and a practical setup for
+          Tahoe days. (Listings shown are demo data.)
         </p>
       </div>
 
@@ -279,8 +279,8 @@ function FinalCTA() {
       <div className="ctaInner">
         <h2 id="cta-title">Ready for a Tahoe reset?</h2>
         <p>
-          Pick your season, bring your people, and we’ll help you land the right home base—close to the
-          lake, the lifts, or the trailhead.
+          Tell us your dates and your style (lake days, ski days, quiet cabin days). We’ll help you land a
+          home base that fits.
         </p>
 
         <div className="ctaActions">
@@ -303,7 +303,7 @@ function Footer() {
     <footer className="footer">
       <div className="footerInner">
         <p>
-          <strong>Lake Tahoe Rentals</strong> — four-season stays for every mood.
+          <strong>Tahoe Four Seasons Rentals</strong> — four‑season stays for every kind of trip.
         </p>
         <p className="muted">© {new Date().getFullYear()} • Made for GitHub Pages</p>
       </div>
