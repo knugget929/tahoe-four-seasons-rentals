@@ -1,5 +1,21 @@
-# Tahoe Seasons
+# Tahoe Seasons — Lake Tahoe rentals landing page
 
-Placeholder main branch.
+A lifestyle-oriented landing page themed around Tahoe’s four seasons.
 
-The landing page is developed on a feature branch and merged via PR.
+- Built with **Vite + React**
+- Static site (GitHub Pages deploy via GitHub Actions)
+- Sections: Spring / Summer / Fall / Winter, sample listings, CTA
+
+## Local dev
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```

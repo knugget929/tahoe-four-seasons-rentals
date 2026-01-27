@@ -1,0 +1,42 @@
+:root {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: #070a0f;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100dvh;
+  background:
+    radial-gradient(1100px 520px at 30% -10%, rgba(126, 230, 255, 0.11), transparent 60%),
+    radial-gradient(900px 420px at 100% 10%, rgba(255, 171, 120, 0.08), transparent 55%),
+    radial-gradient(800px 420px at 0% 100%, rgba(168, 255, 207, 0.08), transparent 55%),
+    #070a0f;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+::selection {
+  background: rgba(126, 230, 255, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
