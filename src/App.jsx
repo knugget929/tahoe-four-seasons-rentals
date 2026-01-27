@@ -110,8 +110,8 @@ function Nav() {
           ⛰
         </span>
         <span className="brandText">
-          <span className="brandName">Tahoe Seasons</span>
-          <span className="brandTag">Lake Tahoe rentals</span>
+          <span className="brandName">Lake Tahoe Rentals</span>
+          <span className="brandTag">Four‑season escapes</span>
         </span>
       </a>
       <nav className="navLinks">
@@ -277,63 +277,22 @@ function FinalCTA() {
   return (
     <section className="cta" id="cta" aria-labelledby="cta-title">
       <div className="ctaInner">
-        <h2 id="cta-title">Ready for your Tahoe chapter?</h2>
+        <h2 id="cta-title">Ready for a Tahoe reset?</h2>
         <p>
-          Tell us your dates and your season. We’ll send a short, curated list that fits your group,
-          your vibe, and your must‑haves.
+          Pick your season, bring your people, and we’ll help you land the right home base—close to the
+          lake, the lifts, or the trailhead.
         </p>
 
-        <form
-          className="ctaForm"
-          onSubmit={(e) => {
-            e.preventDefault()
-            // Static demo: no network requests.
-            const form = e.currentTarget
-            const data = new FormData(form)
-            const name = data.get('name')
-            const dates = data.get('dates')
-            const season = data.get('season')
-            // eslint-disable-next-line no-alert
-            alert(
-              `Thanks${name ? `, ${name}` : ''}! We’ll follow up about ${season || 'your season'} (${
-                dates || 'dates TBD'
-              }).`
-            )
-            form.reset()
-          }}
-        >
-          <label>
-            <span>Your name</span>
-            <input name="name" type="text" autoComplete="name" placeholder="Alex" />
-          </label>
+        <div className="ctaActions">
+          <a className="button primary" href="#listings">
+            Check availability
+          </a>
+          <a className="button secondary" href="#seasons">
+            Explore seasons
+          </a>
+        </div>
 
-          <label>
-            <span>Dates</span>
-            <input name="dates" type="text" placeholder="Mar 8–11" />
-          </label>
-
-          <label>
-            <span>Season</span>
-            <select name="season" defaultValue="">
-              <option value="" disabled>
-                Choose one…
-              </option>
-              {seasons.map((s) => (
-                <option key={s.id} value={s.name}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <button className="button primary" type="submit">
-            Get availability
-          </button>
-        </form>
-
-        <p className="finePrint">
-          Demo site — the form shows a friendly confirmation only (no data is stored).
-        </p>
+        <p className="finePrint">Demo site — CTA buttons are placeholders (no booking flow).</p>
       </div>
     </section>
   )
@@ -344,7 +303,7 @@ function Footer() {
     <footer className="footer">
       <div className="footerInner">
         <p>
-          <strong>Tahoe Seasons</strong> — Lake Tahoe rentals for every mood.
+          <strong>Lake Tahoe Rentals</strong> — four-season stays for every mood.
         </p>
         <p className="muted">© {new Date().getFullYear()} • Made for GitHub Pages</p>
       </div>
