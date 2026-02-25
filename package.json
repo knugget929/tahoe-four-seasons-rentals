@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "geocode": "node scripts/geocode-pois.mjs",
     "prebuild": "node scripts/build-pois.mjs",
     "build": "vite build",
     "lint": "eslint .",

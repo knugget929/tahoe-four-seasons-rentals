@@ -32,3 +32,16 @@ Set these in Vercel project settings:
 - `OPENAI_MODEL` (optional, default: `gpt-4.1-mini`)
 
 > Note: never put the OpenAI key in the browser. The app calls OpenAI only through `/api/generate-itinerary`.
+
+## Geocoding (Phase 4)
+POIs live in `content/pois/*.md`.
+
+- **Preferred:** include `lat`/`lng` in frontmatter.
+- **Supported:** include `address` and omit `lat`/`lng`, then cache geocode results locally:
+
+```bash
+# writes to content/geocode-cache.json
+GEOCODE=1 npm run geocode
+```
+
+Build-time POI export (`npm run build`) will use `content/geocode-cache.json` if present.
