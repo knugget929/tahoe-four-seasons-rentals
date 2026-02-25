@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import maplibregl from 'maplibre-gl'
-import 'maplibre-gl/dist/maplibre-gl.css'
 
 import pois from '../data/pois.json'
 
@@ -26,64 +24,76 @@ export default function ItineraryMap() {
   }, [])
 
   useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return
+    let cancelled = false
 
-    const map = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: 'https://demotiles.maplibre.org/style.json',
-      center: DEFAULT_CENTER,
-      zoom: 9,
-    })
+    async function init() {
+      if (!mapContainerRef.current || mapRef.current) return
 
-    map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right')
+      const maplibregl = (await import('maplibre-gl')).default
+      await import('maplibre-gl/dist/maplibre-gl.css')
 
-    map.on('load', () => {
-      // markers
-      markersRef.current = poiFeatures.map((f) => {
-        const el = document.createElement('button')
-        el.className = 'poiMarker'
-        el.type = 'button'
-        el.setAttribute('aria-label', f.properties.name)
+      if (cancelled) return
 
-        const popup = new maplibregl.Popup({
-          closeButton: false,
-          closeOnClick: false,
-          className: 'poiPopup',
-          offset: 18,
-        }).setHTML(
-          `<div class="poiPopupInner">
-            <p class="poiPopupTitle">${escapeHtml(f.properties.name)}</p>
-            ${f.properties.tags ? `<p class="poiPopupMeta">${escapeHtml(f.properties.tags)}</p>` : ''}
-            ${f.properties.description ? `<p class="poiPopupDesc">${escapeHtml(f.properties.description)}</p>` : ''}
-          </div>`
-        )
-
-        el.addEventListener('mouseenter', () => popup.addTo(map))
-        el.addEventListener('mouseleave', () => {
-          if (selectedId !== f.properties.id) popup.remove()
-        })
-        el.addEventListener('click', () => {
-          setSelectedId(f.properties.id)
-          popup.addTo(map)
-          map.flyTo({ center: f.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), speed: 0.8 })
-        })
-
-        const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-          .setLngLat(f.geometry.coordinates)
-          .addTo(map)
-
-        // attach popup for later
-        marker.__popup = popup
-        marker.__id = f.properties.id
-        return marker
+      const map = new maplibregl.Map({
+        container: mapContainerRef.current,
+        style: 'https://demotiles.maplibre.org/style.json',
+        center: DEFAULT_CENTER,
+        zoom: 9,
       })
-    })
 
-    mapRef.current = map
+      map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right')
+
+      map.on('load', () => {
+        // markers
+        markersRef.current = poiFeatures.map((f) => {
+          const el = document.createElement('button')
+          el.className = 'poiMarker'
+          el.type = 'button'
+          el.setAttribute('aria-label', f.properties.name)
+
+          const popup = new maplibregl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: 'poiPopup',
+            offset: 18,
+          }).setHTML(
+            `<div class="poiPopupInner">
+              <p class="poiPopupTitle">${escapeHtml(f.properties.name)}</p>
+              ${f.properties.tags ? `<p class="poiPopupMeta">${escapeHtml(f.properties.tags)}</p>` : ''}
+              ${f.properties.description ? `<p class="poiPopupDesc">${escapeHtml(f.properties.description)}</p>` : ''}
+            </div>`
+          )
+
+          el.addEventListener('mouseenter', () => popup.addTo(map))
+          el.addEventListener('mouseleave', () => {
+            if (selectedId !== f.properties.id) popup.remove()
+          })
+          el.addEventListener('click', () => {
+            setSelectedId(f.properties.id)
+            popup.addTo(map)
+            map.flyTo({ center: f.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), speed: 0.8 })
+          })
+
+          const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+            .setLngLat(f.geometry.coordinates)
+            .addTo(map)
+
+          // attach popup for later
+          marker.__popup = popup
+          marker.__id = f.properties.id
+          return marker
+        })
+      })
+
+      mapRef.current = map
+    }
+
+    init()
 
     return () => {
+      cancelled = true
       markersRef.current.forEach((m) => m.remove())
-      map.remove()
+      mapRef.current?.remove()
       mapRef.current = null
     }
   }, [poiFeatures, selectedId])
@@ -137,6 +147,10 @@ export default function ItineraryMap() {
         <div className="itineraryMapWrap">
           <div ref={mapContainerRef} className="itineraryMap" />
         </div>
+      </div>
+
+      <div id="cta" style={{ position: 'absolute', left: -9999, top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
+        Generate
       </div>
     </section>
   )
