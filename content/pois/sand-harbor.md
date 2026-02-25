@@ -1,0 +1,11 @@
+---
+id: sand-harbor
+name: Sand Harbor
+lat: 39.1971
+lng: -119.9256
+address: "2005 NV-28, Incline Village, NV"
+tags: [beach, scenic, kid-friendly]
+suggested_duration_min: 120
+best_seasons: [spring, summer]
+---
+Iconic turquoise water and granite boulders. Great for a relaxed morning with kids; arrive early for parking.

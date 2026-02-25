@@ -1,4 +1,5 @@
 import './App.css'
+import ItineraryMap from './components/ItineraryMap'
 
 const seasons = [
   {
@@ -322,6 +323,7 @@ export default function App() {
         <Hero />
         <SeasonGrid />
         <ListingGrid />
+        <ItineraryMap />
         <FinalCTA />
       </main>
       <Footer />
