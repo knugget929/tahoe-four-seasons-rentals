@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import GenerateItineraryModal from '../components/GenerateItineraryModal'
 import ItineraryMap from '../components/ItineraryMap'
-import pois from '../data/pois.json'
-import { itineraryToMarkdown } from '../utils/itineraryExport'
 
 export default function Itinerary() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -12,10 +10,6 @@ export default function Itinerary() {
   const [error, setError] = useState(null)
   const [itinerary, setItinerary] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
-  const [excluded, setExcluded] = useState([])
-
-  const poiById = useMemo(() => new Map((pois || []).map((p) => [p.id, p])), [])
-  const exportMd = useMemo(() => itineraryToMarkdown(itinerary, poiById), [itinerary, poiById])
 
   async function generate(payload) {
     setBusy(true)
@@ -25,7 +19,7 @@ export default function Itinerary() {
       const resp = await fetch('/api/generate-itinerary', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, exclude_poi_ids: excluded }),
+        body: JSON.stringify(payload),
       })
 
       const data = await resp.json().catch(() => ({}))
@@ -35,9 +29,6 @@ export default function Itinerary() {
       const firstStop = data?.itinerary?.days?.[0]?.stops?.[0]?.poi_id
       if (firstStop) setSelectedId(firstStop)
       setModalOpen(false)
-
-      // reset exclusions after a successful regenerate (optional)
-      setExcluded([])
     } catch (e) {
       setError(e.message)
     } finally {
@@ -78,47 +69,10 @@ export default function Itinerary() {
                   Error: {error}
                 </p>
               ) : null}
-              {itinerary ? (
-                <p style={{ marginTop: 10 }} className="muted">
-                  Tip: click a stop, then tap “Swap stop” to exclude it and regenerate.
-                </p>
-              ) : null}
             </div>
-
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              {itinerary ? (
-                <button
-                  className="button small"
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(exportMd)
-                    } catch {
-                      // ignore
-                    }
-                  }}
-                >
-                  Copy Markdown
-                </button>
-              ) : null}
-
-              {itinerary && selectedId ? (
-                <button
-                  className="button small"
-                  type="button"
-                  onClick={() => {
-                    setExcluded((prev) => (prev.includes(selectedId) ? prev : [...prev, selectedId]))
-                    setModalOpen(true)
-                  }}
-                >
-                  Swap stop
-                </button>
-              ) : null}
-
-              <button className="button primary" type="button" onClick={() => setModalOpen(true)}>
-                {busy ? 'Generating…' : itinerary ? 'Regenerate' : 'Generate itinerary'}
-              </button>
-            </div>
+            <button className="button primary" type="button" onClick={() => setModalOpen(true)}>
+              {busy ? 'Generating…' : itinerary ? 'Regenerate' : 'Generate itinerary'}
+            </button>
           </header>
 
           <ItineraryMap selectedId={selectedId} onSelect={setSelectedId} itinerary={itinerary} />
