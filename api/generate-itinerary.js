@@ -15,10 +15,44 @@ import path from 'node:path'
 
 const DEFAULT_MODEL = 'gpt-4.1-mini'
 
+// Best-effort in-memory caching & rate-limiting (per serverless instance).
+const cache = new Map() // key -> { at, value }
+const ipHits = new Map() // ip -> { windowStart, count }
+const CACHE_TTL_MS = 1000 * 60 * 30
+const RATE_WINDOW_MS = 1000 * 60
+const RATE_MAX = 10
+
+function now() {
+  return Date.now()
+}
+
 function loadPois() {
   const filePath = path.join(process.cwd(), 'src', 'data', 'pois.json')
   const raw = fs.readFileSync(filePath, 'utf8')
   return JSON.parse(raw)
+}
+
+function stableStringify(obj) {
+  return JSON.stringify(obj, Object.keys(obj).sort())
+}
+
+function getIp(req) {
+  const xf = req.headers?.['x-forwarded-for']
+  if (typeof xf === 'string' && xf.length) return xf.split(',')[0].trim()
+  return req.socket?.remoteAddress || 'unknown'
+}
+
+function rateLimitOk(req) {
+  const ip = getIp(req)
+  const t = now()
+  const hit = ipHits.get(ip)
+  if (!hit || t - hit.windowStart > RATE_WINDOW_MS) {
+    ipHits.set(ip, { windowStart: t, count: 1 })
+    return { ok: true }
+  }
+  if (hit.count >= RATE_MAX) return { ok: false, ip }
+  hit.count += 1
+  return { ok: true }
 }
 
 function json(res, status, data) {
@@ -119,6 +153,9 @@ export default async function handler(req, res) {
     return json(res, 405, { error: 'Method not allowed' })
   }
 
+  const rl = rateLimitOk(req)
+  if (!rl.ok) return json(res, 429, { error: 'Rate limit exceeded' })
+
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey) return serverError(res, 'Missing OPENAI_API_KEY')
 
@@ -138,6 +175,7 @@ export default async function handler(req, res) {
     start_area = 'Tahoe (flexible)',
     days = 1,
     max_stops_per_day = 4,
+    exclude_poi_ids = [],
   } = body || {}
 
   if (!Number.isInteger(days) || days < 1 || days > 7) {
@@ -154,15 +192,16 @@ export default async function handler(req, res) {
     return serverError(res, 'Failed to load POIs', { message: e?.message })
   }
 
-  const poiForModel = (rawPois || []).map(pickPoiForModel)
+  const excludeSet = new Set(Array.isArray(exclude_poi_ids) ? exclude_poi_ids : [])
+  const poiForModel = (rawPois || []).filter((p) => !excludeSet.has(p.id)).map(pickPoiForModel)
   if (!poiForModel.length) {
-    return serverError(res, 'No POIs available (src/data/pois.json empty)')
+    return serverError(res, 'No POIs available after exclusions', { exclude_poi_ids })
   }
 
   const model = process.env.OPENAI_MODEL || DEFAULT_MODEL
 
   const system =
-    'You are a trip-planning assistant. You must only reference the provided POIs by id. Output must match the JSON schema exactly.'
+    'You are a trip-planning assistant. You must only reference the provided POIs by id. Do not invent POIs. Output must match the JSON schema exactly.'
 
   const user = {
     request: {
@@ -171,8 +210,15 @@ export default async function handler(req, res) {
       pace,
       interests,
       start_area,
+      exclude_poi_ids: Array.from(excludeSet),
     },
     pois: poiForModel,
+  }
+
+  const cacheKey = stableStringify({ model, user })
+  const cached = cache.get(cacheKey)
+  if (cached && now() - cached.at < CACHE_TTL_MS) {
+    return json(res, 200, { itinerary: cached.value, cached: true })
   }
 
   try {
@@ -218,7 +264,8 @@ export default async function handler(req, res) {
     const shapeError = validateItineraryShape(itinerary, poiIdsSet)
     if (shapeError) return serverError(res, 'Invalid itinerary output', { shapeError, itinerary })
 
-    return json(res, 200, { itinerary })
+    cache.set(cacheKey, { at: now(), value: itinerary })
+    return json(res, 200, { itinerary, cached: false })
   } catch (e) {
     return serverError(res, 'Server error', { message: e?.message })
   }
