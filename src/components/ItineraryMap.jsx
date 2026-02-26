@@ -7,6 +7,7 @@ const DEFAULT_CENTER = [-119.9772, 39.0968] // Tahoe (approx)
 export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
+  const maplibreRef = useRef(null)
   const markersRef = useRef([])
 
   const poiById = useMemo(() => {
@@ -54,6 +55,7 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
     }))
   }, [displayPois])
 
+  // Init map once.
   useEffect(() => {
     let cancelled = false
 
@@ -62,6 +64,7 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
 
       const maplibregl = (await import('maplibre-gl')).default
       await import('maplibre-gl/dist/maplibre-gl.css')
+      maplibreRef.current = maplibregl
 
       if (cancelled) return
 
@@ -75,70 +78,24 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
       map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right')
 
       map.on('load', () => {
-        // remove existing markers (in case of re-init)
-        markersRef.current.forEach((m) => m.remove())
-
-        // markers
-        markersRef.current = poiFeatures.map((f) => {
-          const el = document.createElement('button')
-          const stopMeta = stopMetaByPoiId.get(f.properties.id)
-          const orderNumber = stopMeta ? stopMeta.stopIndex + 1 : null
-          const dayIndex = stopMeta ? stopMeta.dayIndex : null
-
-          el.className = 'poiMarker'
-          el.type = 'button'
-          el.setAttribute('aria-label', f.properties.name)
-          if (orderNumber) {
-            el.setAttribute('data-order', String(orderNumber))
-          }
-          if (dayIndex !== null && dayIndex !== undefined) {
-            el.setAttribute('data-day', String(dayIndex))
-          }
-
-          const stopLine = stopMeta
-            ? `<p class="poiPopupMeta">${escapeHtml(stopMeta.time_block)} · ${escapeHtml(stopMeta.label)}</p>`
-            : f.properties.tags
-              ? `<p class="poiPopupMeta">${escapeHtml(f.properties.tags)}</p>`
-              : ''
-
-          const whyLine = stopMeta?.why
-            ? `<p class="poiPopupDesc">${escapeHtml(stopMeta.why)}</p>`
-            : f.properties.description
-              ? `<p class="poiPopupDesc">${escapeHtml(f.properties.description)}</p>`
-              : ''
-
-          const popup = new maplibregl.Popup({
-            closeButton: false,
-            closeOnClick: false,
-            className: 'poiPopup',
-            offset: 18,
-          }).setHTML(
-            `<div class="poiPopupInner">
-              <p class="poiPopupTitle">${escapeHtml(f.properties.name)}</p>
-              ${stopLine}
-              ${whyLine}
-            </div>`
-          )
-
-          el.addEventListener('mouseenter', () => popup.addTo(map))
-          el.addEventListener('mouseleave', () => {
-            if (selectedId !== f.properties.id) popup.remove()
-          })
-          el.addEventListener('click', () => {
-            onSelect?.(f.properties.id)
-            popup.addTo(map)
-            map.flyTo({ center: f.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), speed: 0.8 })
+        // Route layer placeholders
+        if (!map.getSource('itinerary-routes')) {
+          map.addSource('itinerary-routes', {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] },
           })
 
-          const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-            .setLngLat(f.geometry.coordinates)
-            .addTo(map)
-
-          // attach popup for later
-          marker.__popup = popup
-          marker.__id = f.properties.id
-          return marker
-        })
+          map.addLayer({
+            id: 'itinerary-routes-line',
+            type: 'line',
+            source: 'itinerary-routes',
+            paint: {
+              'line-color': ['get', 'color'],
+              'line-width': 3,
+              'line-opacity': 0.85,
+            },
+          })
+        }
       })
 
       mapRef.current = map
@@ -152,7 +109,85 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
       mapRef.current?.remove()
       mapRef.current = null
     }
-  }, [poiFeatures, selectedId, onSelect, stopMetaByPoiId])
+  }, [])
+
+  // Update markers + routes when POIs/itinerary change.
+  useEffect(() => {
+    const map = mapRef.current
+    const maplibregl = maplibreRef.current
+    if (!map || !maplibregl) return
+
+    // remove existing markers
+    markersRef.current.forEach((m) => m.remove())
+
+    // markers
+    markersRef.current = poiFeatures.map((f) => {
+      const el = document.createElement('button')
+      const stopMeta = stopMetaByPoiId.get(f.properties.id)
+      const orderNumber = stopMeta ? stopMeta.stopIndex + 1 : null
+      const dayIndex = stopMeta ? stopMeta.dayIndex : null
+
+      el.className = 'poiMarker'
+      el.type = 'button'
+      el.setAttribute('aria-label', f.properties.name)
+      if (orderNumber) {
+        el.setAttribute('data-order', String(orderNumber))
+      }
+      if (dayIndex !== null && dayIndex !== undefined) {
+        el.setAttribute('data-day', String(dayIndex))
+      }
+
+      const stopLine = stopMeta
+        ? `<p class="poiPopupMeta">${escapeHtml(stopMeta.time_block)} · ${escapeHtml(stopMeta.label)}</p>`
+        : f.properties.tags
+          ? `<p class="poiPopupMeta">${escapeHtml(f.properties.tags)}</p>`
+          : ''
+
+      const whyLine = stopMeta?.why
+        ? `<p class="poiPopupDesc">${escapeHtml(stopMeta.why)}</p>`
+        : f.properties.description
+          ? `<p class="poiPopupDesc">${escapeHtml(f.properties.description)}</p>`
+          : ''
+
+      const popup = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        className: 'poiPopup',
+        offset: 18,
+      }).setHTML(
+        `<div class="poiPopupInner">
+            <p class="poiPopupTitle">${escapeHtml(f.properties.name)}</p>
+            ${stopLine}
+            ${whyLine}
+          </div>`
+      )
+
+      el.addEventListener('mouseenter', () => popup.addTo(map))
+      el.addEventListener('mouseleave', () => {
+        if (selectedId !== f.properties.id) popup.remove()
+      })
+      el.addEventListener('click', () => {
+        onSelect?.(f.properties.id)
+        popup.addTo(map)
+        map.flyTo({ center: f.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), speed: 0.8 })
+      })
+
+      const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+        .setLngLat(f.geometry.coordinates)
+        .addTo(map)
+
+      marker.__popup = popup
+      marker.__id = f.properties.id
+      return marker
+    })
+
+    // routes
+    const routeFc = buildRouteGeoJson(itinerary, poiById)
+    const src = map.getSource('itinerary-routes')
+    if (src && typeof src.setData === 'function') {
+      src.setData(routeFc)
+    }
+  }, [poiFeatures, stopMetaByPoiId, onSelect, itinerary, poiById, selectedId])
 
   useEffect(() => {
     // Update marker selected state (CSS class)
@@ -226,6 +261,38 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
       </div>
     </div>
   )
+}
+
+function buildRouteGeoJson(itinerary, poiById) {
+  const dayColors = [
+    'rgba(45, 106, 79, 0.9)',
+    'rgba(125, 211, 252, 0.9)',
+    'rgba(242, 199, 110, 0.9)',
+    'rgba(246, 245, 240, 0.85)',
+  ]
+
+  if (!itinerary?.days?.length) {
+    return { type: 'FeatureCollection', features: [] }
+  }
+
+  const features = []
+
+  itinerary.days.forEach((day, dayIndex) => {
+    const coords = (day.stops || [])
+      .map((s) => poiById.get(s.poi_id))
+      .filter(Boolean)
+      .map((p) => [p.lng, p.lat])
+
+    if (coords.length < 2) return
+
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: coords },
+      properties: { color: dayColors[dayIndex] || dayColors[0] },
+    })
+  })
+
+  return { type: 'FeatureCollection', features }
 }
 
 function escapeHtml(str) {
