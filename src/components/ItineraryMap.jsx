@@ -111,7 +111,7 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
     }
   }, [])
 
-  // Update markers + routes when itinerary/POIs change.
+  // Update markers + routes when POIs/itinerary change.
   useEffect(() => {
     const map = mapRef.current
     const maplibregl = maplibreRef.current
@@ -164,7 +164,7 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
 
       el.addEventListener('mouseenter', () => popup.addTo(map))
       el.addEventListener('mouseleave', () => {
-        popup.remove()
+        if (selectedId !== f.properties.id) popup.remove()
       })
       el.addEventListener('click', () => {
         onSelect?.(f.properties.id)
@@ -187,7 +187,7 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
     if (src && typeof src.setData === 'function') {
       src.setData(routeFc)
     }
-  }, [poiFeatures, stopMetaByPoiId, onSelect, itinerary, poiById])
+  }, [poiFeatures, stopMetaByPoiId, onSelect, itinerary, poiById, selectedId])
 
   useEffect(() => {
     // Update marker selected state (CSS class)
@@ -264,7 +264,12 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
 }
 
 function buildRouteGeoJson(itinerary, poiById) {
-  const dayColors = ['rgba(45, 106, 79, 0.9)', 'rgba(125, 211, 252, 0.9)', 'rgba(242, 199, 110, 0.9)', 'rgba(246, 245, 240, 0.85)']
+  const dayColors = [
+    'rgba(45, 106, 79, 0.9)',
+    'rgba(125, 211, 252, 0.9)',
+    'rgba(242, 199, 110, 0.9)',
+    'rgba(246, 245, 240, 0.85)',
+  ]
 
   if (!itinerary?.days?.length) {
     return { type: 'FeatureCollection', features: [] }
