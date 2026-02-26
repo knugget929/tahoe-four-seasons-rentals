@@ -1,17 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import pois from '../data/pois.json'
 
 const DEFAULT_CENTER = [-119.9772, 39.0968] // Tahoe (approx)
 
-export default function ItineraryMap() {
+export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
   const markersRef = useRef([])
-  const [selectedId, setSelectedId] = useState(null)
+
+  const poiById = useMemo(() => {
+    return new Map((pois || []).map((p) => [p.id, p]))
+  }, [])
+
+  const displayPois = useMemo(() => {
+    const stopIds = itinerary?.days?.flatMap((d) => d.stops?.map((s) => s.poi_id) || []) || []
+    if (!stopIds.length) return pois || []
+    const unique = [...new Set(stopIds)]
+    return unique.map((id) => poiById.get(id)).filter(Boolean)
+  }, [itinerary, poiById])
 
   const poiFeatures = useMemo(() => {
-    return (pois || []).map((p) => ({
+    return (displayPois || []).map((p) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [p.lng, p.lat] },
       properties: {
@@ -21,7 +31,7 @@ export default function ItineraryMap() {
         description: p.description || '',
       },
     }))
-  }, [])
+  }, [displayPois])
 
   useEffect(() => {
     let cancelled = false
@@ -69,7 +79,7 @@ export default function ItineraryMap() {
             if (selectedId !== f.properties.id) popup.remove()
           })
           el.addEventListener('click', () => {
-            setSelectedId(f.properties.id)
+            onSelect?.(f.properties.id)
             popup.addTo(map)
             map.flyTo({ center: f.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), speed: 0.8 })
           })
@@ -96,7 +106,7 @@ export default function ItineraryMap() {
       mapRef.current?.remove()
       mapRef.current = null
     }
-  }, [poiFeatures, selectedId])
+  }, [poiFeatures, selectedId, onSelect])
 
   useEffect(() => {
     // Update marker selected state (CSS class)
@@ -112,47 +122,63 @@ export default function ItineraryMap() {
   }, [selectedId])
 
   return (
-    <section className="itineraryShell" aria-label="Itinerary helper (map)">
-      <header className="itineraryHeader">
-        <div>
-          <h2 className="itineraryTitle">Itinerary helper (prototype)</h2>
-          <p className="itinerarySubtitle">
-            Pan/zoom the map and hover a pin for a quick preview. (Dev tiles + sample POIs.)
-          </p>
-        </div>
-        <a className="button small" href="#cta">
-          Generate (soon)
-        </a>
-      </header>
-
-      <div className="itineraryLayout">
-        <div className="itineraryPanel" aria-label="Stops list">
-          <p className="muted">Sample POIs (from markdown):</p>
-          <ul className="poiList">
-            {(pois || []).map((p) => (
-              <li key={p.id}>
-                <button
-                  type="button"
-                  className={`poiListItem ${selectedId === p.id ? 'active' : ''}`}
-                  onClick={() => setSelectedId(p.id)}
-                >
-                  <span className="poiListName">{p.name}</span>
-                  {p.tags?.length ? <span className="poiListTags">{p.tags.join(' · ')}</span> : null}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="itineraryMapWrap">
-          <div ref={mapContainerRef} className="itineraryMap" />
-        </div>
+    <div className="itineraryLayout">
+      <div className="itineraryPanel" aria-label="Stops list">
+        {!itinerary ? (
+          <>
+            <p className="muted">Sample POIs (from markdown):</p>
+            <ul className="poiList">
+              {(displayPois || []).map((p) => (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    className={`poiListItem ${selectedId === p.id ? 'active' : ''}`}
+                    onClick={() => onSelect?.(p.id)}
+                  >
+                    <span className="poiListName">{p.name}</span>
+                    {p.tags?.length ? <span className="poiListTags">{p.tags.join(' · ')}</span> : null}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <>
+            <p className="muted">Generated itinerary</p>
+            <div className="dayList">
+              {itinerary.days.map((d) => (
+                <section key={d.label} className="dayBlock" aria-label={d.label}>
+                  <h3 className="dayTitle">{d.label}</h3>
+                  <ol className="stopList">
+                    {d.stops.map((s) => {
+                      const poi = poiById.get(s.poi_id)
+                      return (
+                        <li key={`${d.label}-${s.poi_id}-${s.time_block}`}>
+                          <button
+                            type="button"
+                            className={`poiListItem ${selectedId === s.poi_id ? 'active' : ''}`}
+                            onClick={() => onSelect?.(s.poi_id)}
+                          >
+                            <span className="poiListName">{poi?.name || s.poi_id}</span>
+                            <span className="poiListTags">
+                              {s.time_block} · {s.duration_min}m · {s.label}
+                            </span>
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ol>
+                </section>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
-      <div id="cta" style={{ position: 'absolute', left: -9999, top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
-        Generate
+      <div className="itineraryMapWrap">
+        <div ref={mapContainerRef} className="itineraryMap" />
       </div>
-    </section>
+    </div>
   )
 }
 
