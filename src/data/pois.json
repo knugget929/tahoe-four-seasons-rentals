@@ -1,5 +1,60 @@
 [
   {
+    "id": "emerald-bay",
+    "name": "Emerald Bay State Park (lookout)",
+    "lat": 38.953,
+    "lng": -120.103,
+    "tags": [
+      "scenic",
+      "viewpoint",
+      "photo-stop"
+    ],
+    "suggested_duration_min": 45,
+    "best_seasons": [
+      "spring",
+      "summer",
+      "fall"
+    ],
+    "description": "Classic Tahoe viewpoint with a quick stop payoff. Good anchor for a scenic drive day; bring a layer—windy at the overlook.",
+    "source_file": "emerald-bay.md"
+  },
+  {
+    "id": "heavenly-gondola",
+    "name": "Heavenly Gondola (scenic ride)",
+    "lat": 38.9517,
+    "lng": -119.942,
+    "tags": [
+      "scenic",
+      "viewpoint",
+      "activity"
+    ],
+    "suggested_duration_min": 120,
+    "best_seasons": [
+      "summer",
+      "fall",
+      "winter"
+    ],
+    "description": "An easy way to get big views with minimal planning. Works as a midday anchor on a mixed “town + views” day.",
+    "source_file": "heavenly-gondola.md"
+  },
+  {
+    "id": "kings-beach",
+    "name": "Kings Beach",
+    "lat": 39.2374,
+    "lng": -120.0227,
+    "tags": [
+      "beach",
+      "kid-friendly",
+      "swim"
+    ],
+    "suggested_duration_min": 120,
+    "best_seasons": [
+      "summer"
+    ],
+    "description": "Wide sandy beach with a mellow vibe—good for families and an easy lake day. Best earlier to avoid peak crowds.",
+    "source_file": "kings-beach.md"
+  },
+  {
     "id": "sand-harbor",
     "name": "Sand Harbor",
     "lat": 39.1971,
@@ -17,5 +72,82 @@
     ],
     "description": "Iconic turquoise water and granite boulders. Great for a relaxed morning with kids; arrive early for parking.",
     "source_file": "sand-harbor.md"
+  },
+  {
+    "id": "spooner-lake",
+    "name": "Spooner Lake (easy loop)",
+    "lat": 39.1113,
+    "lng": -119.8896,
+    "tags": [
+      "hike",
+      "kid-friendly",
+      "nature"
+    ],
+    "suggested_duration_min": 75,
+    "best_seasons": [
+      "spring",
+      "summer",
+      "fall"
+    ],
+    "description": "A gentle loop with forest + lake views. Great “low drama” nature time if you want movement without a big climb.",
+    "source_file": "spooner-lake.md"
+  },
+  {
+    "id": "tahoe-city-marina",
+    "name": "Tahoe City (lakeside stroll)",
+    "lat": 39.1724,
+    "lng": -120.139,
+    "tags": [
+      "town",
+      "scenic",
+      "coffee",
+      "kid-friendly"
+    ],
+    "suggested_duration_min": 75,
+    "best_seasons": [
+      "spring",
+      "summer",
+      "fall"
+    ],
+    "description": "Easy lakeside walking, quick snacks, and a low-effort “stretch your legs” stop—good between longer scenic points.",
+    "source_file": "tahoe-city-marina.md"
+  },
+  {
+    "id": "truckee-downtown",
+    "name": "Truckee (downtown walk)",
+    "lat": 39.3278,
+    "lng": -120.1833,
+    "tags": [
+      "town",
+      "food",
+      "coffee"
+    ],
+    "suggested_duration_min": 90,
+    "best_seasons": [
+      "winter",
+      "spring",
+      "summer",
+      "fall"
+    ],
+    "description": "A solid “warm up / wind down” stop: browse, grab coffee, and pick a simple meal without committing to a big plan.",
+    "source_file": "truckee-downtown.md"
+  },
+  {
+    "id": "vikingsholm",
+    "name": "Vikingsholm (Emerald Bay)",
+    "lat": 38.9528,
+    "lng": -120.1015,
+    "tags": [
+      "scenic",
+      "history",
+      "hike"
+    ],
+    "suggested_duration_min": 150,
+    "best_seasons": [
+      "summer",
+      "fall"
+    ],
+    "description": "A short-but-steep hike down to the shore with a unique historic home and big lake views. Plan extra time for the climb back up.",
+    "source_file": "vikingsholm.md"
   }
 ]

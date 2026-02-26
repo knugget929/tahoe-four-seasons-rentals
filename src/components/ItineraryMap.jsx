@@ -13,6 +13,27 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
     return new Map((pois || []).map((p) => [p.id, p]))
   }, [])
 
+  const stopMetaByPoiId = useMemo(() => {
+    const map = new Map()
+    if (!itinerary?.days?.length) return map
+
+    itinerary.days.forEach((day, dayIndex) => {
+      ;(day.stops || []).forEach((stop, stopIndex) => {
+        if (!map.has(stop.poi_id)) {
+          map.set(stop.poi_id, {
+            dayIndex,
+            stopIndex,
+            time_block: stop.time_block,
+            label: stop.label,
+            why: stop.why,
+          })
+        }
+      })
+    })
+
+    return map
+  }, [itinerary])
+
   const displayPois = useMemo(() => {
     const stopIds = itinerary?.days?.flatMap((d) => d.stops?.map((s) => s.poi_id) || []) || []
     if (!stopIds.length) return pois || []
@@ -54,12 +75,37 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
       map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right')
 
       map.on('load', () => {
+        // remove existing markers (in case of re-init)
+        markersRef.current.forEach((m) => m.remove())
+
         // markers
         markersRef.current = poiFeatures.map((f) => {
           const el = document.createElement('button')
+          const stopMeta = stopMetaByPoiId.get(f.properties.id)
+          const orderNumber = stopMeta ? stopMeta.stopIndex + 1 : null
+          const dayIndex = stopMeta ? stopMeta.dayIndex : null
+
           el.className = 'poiMarker'
           el.type = 'button'
           el.setAttribute('aria-label', f.properties.name)
+          if (orderNumber) {
+            el.setAttribute('data-order', String(orderNumber))
+          }
+          if (dayIndex !== null && dayIndex !== undefined) {
+            el.setAttribute('data-day', String(dayIndex))
+          }
+
+          const stopLine = stopMeta
+            ? `<p class="poiPopupMeta">${escapeHtml(stopMeta.time_block)} · ${escapeHtml(stopMeta.label)}</p>`
+            : f.properties.tags
+              ? `<p class="poiPopupMeta">${escapeHtml(f.properties.tags)}</p>`
+              : ''
+
+          const whyLine = stopMeta?.why
+            ? `<p class="poiPopupDesc">${escapeHtml(stopMeta.why)}</p>`
+            : f.properties.description
+              ? `<p class="poiPopupDesc">${escapeHtml(f.properties.description)}</p>`
+              : ''
 
           const popup = new maplibregl.Popup({
             closeButton: false,
@@ -69,8 +115,8 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
           }).setHTML(
             `<div class="poiPopupInner">
               <p class="poiPopupTitle">${escapeHtml(f.properties.name)}</p>
-              ${f.properties.tags ? `<p class="poiPopupMeta">${escapeHtml(f.properties.tags)}</p>` : ''}
-              ${f.properties.description ? `<p class="poiPopupDesc">${escapeHtml(f.properties.description)}</p>` : ''}
+              ${stopLine}
+              ${whyLine}
             </div>`
           )
 
@@ -106,7 +152,7 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
       mapRef.current?.remove()
       mapRef.current = null
     }
-  }, [poiFeatures, selectedId, onSelect])
+  }, [poiFeatures, selectedId, onSelect, stopMetaByPoiId])
 
   useEffect(() => {
     // Update marker selected state (CSS class)
