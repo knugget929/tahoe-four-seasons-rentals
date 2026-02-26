@@ -28,6 +28,16 @@ function validatePoi(poi, file) {
   }
 }
 
+function loadGeocodeCache() {
+  const cachePath = path.join(ROOT, 'content', 'geocode-cache.json')
+  if (!fs.existsSync(cachePath)) return {}
+  try {
+    return JSON.parse(fs.readFileSync(cachePath, 'utf8') || '{}')
+  } catch {
+    return {}
+  }
+}
+
 function main() {
   if (!fs.existsSync(CONTENT_DIR)) {
     // Don’t hard fail if no content yet—create an empty dataset so dev server still runs.
@@ -36,6 +46,8 @@ function main() {
     console.log(`[build-pois] No content dir yet. Wrote empty dataset to ${path.relative(ROOT, OUT_PATH)}`)
     return
   }
+
+  const geocodeCache = loadGeocodeCache()
 
   const files = fs
     .readdirSync(CONTENT_DIR)
@@ -47,12 +59,15 @@ function main() {
     const parsed = matter(raw)
     const fm = parsed.data || {}
 
+    const address = fm.address
+    const cached = address ? geocodeCache[String(address).trim()] : null
+
     const poi = {
       id: fm.id,
       name: fm.name,
-      lat: fm.lat,
-      lng: fm.lng,
-      address: fm.address,
+      lat: isNumber(fm.lat) ? fm.lat : cached?.lat,
+      lng: isNumber(fm.lng) ? fm.lng : cached?.lng,
+      address,
       tags: fm.tags || [],
       suggested_duration_min: fm.suggested_duration_min,
       best_seasons: fm.best_seasons || [],
