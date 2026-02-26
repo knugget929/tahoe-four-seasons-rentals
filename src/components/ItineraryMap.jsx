@@ -122,7 +122,7 @@ export default function ItineraryMap({ selectedId, onSelect, itinerary }) {
 
           el.addEventListener('mouseenter', () => popup.addTo(map))
           el.addEventListener('mouseleave', () => {
-            popup.remove()
+            if (selectedId !== f.properties.id) popup.remove()
           })
           el.addEventListener('click', () => {
             onSelect?.(f.properties.id)
